@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <title>First Day</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="first day">
+    <meta name="theme-color" content="#317EFB"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1 user-scalable=no">
+    <meta property="og:site_name" content="markdown"/>
+    <meta property="og:locale" content="ru_RU"/>
+    <meta property="og:type" content="contract"/>
+    <meta property="og:title" content="markdown"/>
+    <meta property="og:description" content="markdown"/>
+    <meta property="og:url" content="https://zababurinsv.github.io/design/"/>
+    <meta property="og:image" content="https://i.imgur.com/pSrPUkJ.jpg"/>
+    <meta property="og:image:width" content="537"/>
+    <meta property="og:image:height" content="240"/>
+    <meta name="google" value="notranslate">
+    <link rel="shortcut icon"
+          href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAACASURBVHgB7ZPBDYAgDEXbxn10A91EL4ShuLCJuIFO4gbgJzFGEyURLh58l6aHPij5sFJqZeaFMggh1ASBo0y01qNQIdW5wW0GEWlTA977yRhjbwV4iw579SkBDojFHj0V8gu+ILjkABlwyEJyIAbpUbAnzNILilfg+J1RZ8qj2QDOtCQVwp/JQAAAAABJRU5ErkJggg=="
+          type="image/png"
+    >
+</head>
+<body>
+<div>
+    <canvas id="canvas"></canvas>
+</div>
+<div id="status"></div>
+<progress id="progress"></progress>
+<spiner id="spinner"></spiner>
+<div id="#output"></div>
+
+<script type="module">
+    import {Elite} from './this/index.mjs'
+
+    let statusElement = document.body.querySelector('#status')
+    let progressElement = document.body.querySelector('#progress')
+    let spinnerElement = document.body.querySelector('#spinner')
+
+    let Module = {
+        print: function() {
+            let e = document.body.querySelector('#output');
+            return e && (e.value = ''), (...t) => {
+                var n = t.join(' ');
+                console.log(n), e && (e.value += n + '\n', e.scrollTop = e.scrollHeight);
+            };
+        }(),
+        canvas: (() => {
+            let e = document.body.querySelector('#canvas');
+            return e.addEventListener('webglcontextlost', (e => {
+                alert('WebGL context lost. You will need to reload the page.'), e.preventDefault();
+            }), !1), e;
+        })(),
+        setStatus: e => {
+            if (Module.setStatus.last || (Module.setStatus.last = { time: Date.now(), text: '' }), e !== Module.setStatus.last.text) {
+                var t = e.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/), n = Date.now();
+                t && n - Module.setStatus.last.time < 30 || (Module.setStatus.last.time = n, Module.setStatus.last.text = e, t ? (e = t[1], progressElement.value = 100 * parseInt(t[2]), progressElement.max = 100 * parseInt(t[4]), progressElement.hidden = !1, spinnerElement.hidden = !1) : (progressElement.value = null, progressElement.max = null, progressElement.hidden = !0, e || (spinnerElement.style.display = 'none')), statusElement.innerHTML = e);
+            }
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: e => {
+            Module.totalDependencies = Math.max(Module.totalDependencies, e), Module.setStatus(e ? 'Preparing... (' + (Module.totalDependencies - e) + '/' + Module.totalDependencies + ')' : 'All downloads complete.');
+        }
+    };
+
+    Module.setStatus('Downloading...'), window.onerror = e => {
+        Module.setStatus('Exception thrown, see JavaScript console'), spinnerElement.style.display = 'none', Module.setStatus = e => {
+            e && console.error('[post-exception status] ' + e);
+        };
+    };
+
+
+    await Elite(Module)
+</script>
+</body>
+</html>
