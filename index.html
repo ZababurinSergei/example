@@ -22,7 +22,7 @@
     >
 </head>
 <body>
-<div>
+<div class="container">
     <canvas id="canvas"></canvas>
 </div>
 <div id="status"></div>
@@ -30,8 +30,14 @@
 <spiner id="spinner"></spiner>
 <div id="#output"></div>
 <style>
-    #canvas {
-        height: 100%!important;
+    /*#canvas {*/
+    /*    height: 100%!important;*/
+    /*}*/
+    .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        margin: auto;
     }
 </style>
 <script type="module">
