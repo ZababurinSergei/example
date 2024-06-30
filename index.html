@@ -30,9 +30,18 @@
 <spiner id="spinner"></spiner>
 <div id="#output"></div>
 <style>
-    /*#canvas {*/
-    /*    height: 100%!important;*/
-    /*}*/
+    html {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        aspect-ratio: 16 / 9;
+        width: 100%;
+    }
+
+    body {
+        height: inherit;
+    }
+
     .container {
         display: flex;
         flex-direction: row;
